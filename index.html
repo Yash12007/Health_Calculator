@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Health Calculator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    body{
+      background-color: black;
+      color: white;
+    }
+    .btn-primary{
+      background-color: black;
+      color: white;
+      border-color: blue;
+    }
+    .btn-primary:hover{
+      background-color: black;
+      color: white;
+      border-color: blue;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      width: 100%;
+    }
+
+    .range-bar {
+      width: 80%;
+      height: 5px;
+      border-radius: 30px;
+      margin-bottom: 10px;
+    }
+
+    .range-bar-inner {
+      height: 100%;
+      border-radius: 30px;
+    }
+
+    .range-bar-green {
+      background: linear-gradient(to right, #33cc33, #66cc33);
+    }
+
+    .range-bar-yellow {
+      background: linear-gradient(to right, #66cc33, #ffcc00);
+    }
+
+    .range-bar-orange {
+      background: linear-gradient(to right, #ffcc00, #ff6600);
+    }
+
+    .range-bar-red {
+      background: linear-gradient(to right, #ff6600, #ff3300);
+    }
+
+    .classification-label {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="background-color: black; color: cyan;">Health Calculator</h1>
+
+    <!-- BMI Calculator -->
+    <h2>BMI Calculator</h2>
+    <div class="form-group">
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weight" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="height">Height (cm):</label>
+      <input type="number" id="height" class="form-control">
+    </div>
+    <button id="calculateBMI" class="btn btn-primary">Calculate BMI</button>
+    <div class="range-bar">
+      <div class="range-bar-inner" id="bmiRangeBar"></div>
+    </div>
+    <div class="classification-label" id="bmiClassification"></div>
+
+    <!-- Sleep Calculator -->
+    <h2>Sleep Calculator</h2>
+    <div class="form-group">
+      <label for="bedtime">Bedtime:</label>
+      <input type="time" id="bedtime" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="wakeup">Wakeup Time:</label>
+      <input type="time" id="wakeup" class="form-control">
+    </div>
+    <button id="calculateSleep" class="btn btn-primary">Calculate Sleep Duration</button>
+    <div class="range-bar">
+      <div class="range-bar-inner" id="sleepRangeBar"></div>
+    </div>
+    <div class="classification-label" id="sleepClassification"></div>
+
+    <!-- Water Intake Calculator -->
+    <h2>Water Intake Calculator</h2>
+    <div class="form-group">
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weightWater" class="form-control">
+    </div>
+    <button id="calculateWaterIntake" class="btn btn-primary">Calculate Water Intake</button>
+    <div class="range-bar">
+      <div class="range-bar-inner" id="waterIntakeRangeBar"></div>
+    </div>
+    <div class="classification-label" id="waterIntakeClassification"></div>
+
+    <!-- Calorie Intake Calculator -->
+    <h2>Calorie Intake Calculator</h2>
+    <div class="form-group">
+      <label for="age">Age:</label>
+      <input type="number" id="age" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="gender">Gender:</label>
+      <select id="gender" class="form-control">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weightCalorie" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="height">Height (cm):</label>
+      <input type="number" id="heightCalorie" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="activityLevel">Activity Level:</label>
+      <select id="activityLevel" class="form-control">
+        <option value="sedentary">Sedentary (little or no exercise)</option>
+        <option value="lightlyActive">Lightly Active (light exercise/sports 1-3 days/week)</option>
+        <option value="moderatelyActive">Moderately Active (moderate exercise/sports 3-5 days/week)</option>
+        <option value="veryActive">Very Active (hard exercise/sports 6-7 days a week)</option>
+        <option value="extraActive">Extra Active (very hard exercise/sports and a physical job)</option>
+      </select>
+    </div>
+    <button id="calculateCalorieIntake" class="btn btn-primary">Calculate Calorie Intake</button>
+    <div class="range-bar">
+      <div class="range-bar-inner" id="calorieIntakeRangeBar"></div>
+    </div>
+    <div class="classification-label" id="calorieIntakeClassification"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <script>
+    document.getElementById('calculateBMI').addEventListener('click', function() {
+      var weight = document.getElementById('weight').value;
+      var height = document.getElementById('height').value;
+
+      if (weight && height) {
+        var bmi = weight / Math.pow(height / 100, 2);
+        document.getElementById('bmiClassification').innerHTML = getBMIClassification(bmi);
+        document.getElementById('bmiRangeBar').style.background = getBMIRangeColor(bmi);
+      }
+    });
+
+    document.getElementById('calculateSleep').addEventListener('click', function() {
+      var bedtime = document.getElementById('bedtime').value;
+      var wakeup = document.getElementById('wakeup').value;
+
+      if (bedtime && wakeup) {
+        var sleepDuration = calculateSleepDuration(bedtime, wakeup);
+        document.getElementById('sleepClassification').innerHTML = getSleepClassification(sleepDuration);
+        document.getElementById('sleepRangeBar').style.background = getSleepRangeColor(sleepDuration);
+      }
+    });
+
+    document.getElementById('calculateWaterIntake').addEventListener('click', function() {
+      var weightWater = document.getElementById('weightWater').value;
+
+      if (weightWater) {
+        var waterIntake = calculateWaterIntake(weightWater);
+        document.getElementById('waterIntakeClassification').innerHTML = waterIntake + ' ml';
+        document.getElementById('waterIntakeRangeBar').style.background = getWaterIntakeRangeColor(waterIntake);
+      }
+    });
+
+    document.getElementById('calculateCalorieIntake').addEventListener('click', function() {
+      var age = document.getElementById('age').value;
+      var gender = document.getElementById('gender').value;
+      var weightCalorie = document.getElementById('weightCalorie').value;
+      var heightCalorie = document.getElementById('heightCalorie').value;
+      var activityLevel = document.getElementById('activityLevel').value;
+
+      if (age && gender && weightCalorie && heightCalorie && activityLevel) {
+        var calorieIntake = calculateCalorieIntake(age, gender, weightCalorie, heightCalorie, activityLevel);
+        document.getElementById('calorieIntakeClassification').innerHTML = calorieIntake + ' kcal';
+        document.getElementById('calorieIntakeRangeBar').style.background = getCalorieIntakeRangeColor(calorieIntake);
+      }
+    });
+
+    function calculateSleepDuration(bedtime, wakeup) {
+      var bedtimeMinutes = getTimeInMinutes(bedtime);
+      var wakeupMinutes = getTimeInMinutes(wakeup);
+
+      if (wakeupMinutes > bedtimeMinutes) {
+        return wakeupMinutes - bedtimeMinutes;
+      } else {
+        return (wakeupMinutes + 1440) - bedtimeMinutes; // Adding 24 hours (1440 minutes)
+      }
+    }
+
+    function getTimeInMinutes(timeString) {
+      var timeParts = timeString.split(':');
+      var hours = parseInt(timeParts[0]);
+      var minutes = parseInt(timeParts[1]);
+      return (hours * 60) + minutes;
+    }
+
+    function getBMIClassification(bmi) {
+      if (bmi < 18.5) {
+        return 'Underweight';
+      } else if (bmi >= 18.5 && bmi < 25) {
+        return 'Normal weight';
+      } else if (bmi >= 25 && bmi < 30) {
+        return 'Overweight';
+      } else {
+        return 'Obese';
+      }
+    }
+
+    function getSleepClassification(hours) {
+      if (hours < 7) {
+        return 'Insufficient sleep';
+      } else if (hours >= 7 && hours < 9) {
+        return 'Recommended sleep duration';
+      } else {
+        return 'Excessive sleep';
+      }
+    }
+
+    function calculateWaterIntake(weight) {
+      return weight * 30;
+    }
+
+    function calculateCalorieIntake(age, gender, weight, height, activityLevel) {
+      var bmr;
+
+      if (gender === 'male') {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
+
+      var calorieIntake;
+
+      switch (activityLevel) {
+        case 'sedentary':
+          calorieIntake = bmr * 1.2;
+          break;
+        case 'lightlyActive':
+          calorieIntake = bmr * 1.375;
+          break;
+        case 'moderatelyActive':
+          calorieIntake = bmr * 1.55;
+          break;
+        case 'veryActive':
+          calorieIntake = bmr * 1.725;
+          break;
+        case 'extraActive':
+          calorieIntake = bmr * 1.9;
+          break;
+      }
+
+      return Math.round(calorieIntake);
+    }
+
+    function getBMIRangeColor(bmi) {
+      if (bmi < 18.5) {
+        return 'linear-gradient(to right, #33cc33, #66cc33)';
+      } else if (bmi >= 18.5 && bmi < 25) {
+        return 'linear-gradient(to right, #66cc33, #ffcc00)';
+      } else if (bmi >= 25 && bmi < 30) {
+        return 'linear-gradient(to right, #ffcc00, #ff6600)';
+      } else {
+        return 'linear-gradient(to right, #ff6600, #ff3300)';
+      }
+    }
+
+    function getSleepRangeColor(hours) {
+      if (hours < 7) {
+        return 'linear-gradient(to right, #33cc33, #66cc33)';
+      } else if (hours >= 7 && hours < 9) {
+        return 'linear-gradient(to right, #66cc33, #ffcc00)';
+      } else {
+        return 'linear-gradient(to right, #ffcc00, #ff6600)';
+      }
+    }
+
+    function getWaterIntakeRangeColor(intake) {
+      if (intake < 2000) {
+        return 'linear-gradient(to right, #33cc33, #66cc33)';
+      } else if (intake >= 2000 && intake < 3000) {
+        return 'linear-gradient(to right, #66cc33, #ffcc00)';
+      } else if (intake >= 3000 && intake < 4000) {
+        return 'linear-gradient(to right, #ffcc00, #ff6600)';
+      } else {
+        return 'linear-gradient(to right, #ff6600, #ff3300)';
+      }
+    }
+
+    function getCalorieIntakeRangeColor(calorieIntake) {
+      if (calorieIntake < 1500) {
+        return 'linear-gradient(to right, #33cc33, #66cc33)';
+      } else if (calorieIntake >= 1500 && calorieIntake < 2000) {
+        return 'linear-gradient(to right, #66cc33, #ffcc00)';
+      } else if (calorieIntake >= 2000 && calorieIntake < 2500) {
+        return 'linear-gradient(to right, #ffcc00, #ff6600)';
+      } else {
+        return 'linear-gradient(to right, #ff6600, #ff3300)';
+      }
+    }
+  </script>
+</body>
+</html>
